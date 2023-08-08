@@ -467,25 +467,16 @@ QGCCameraControl::setVideoMode()
 {
     if(!_resetting && hasModes()) {
         qCDebug(CameraControlLog) << "setVideoMode()";
-        //-- Does it have a mode parameter?
-        Fact* pMode = mode();
-        if(pMode) {
-            if(cameraMode() != CAM_MODE_VIDEO) {
-                pMode->setRawValue(CAM_MODE_VIDEO);
-                _setCameraMode(CAM_MODE_VIDEO);
-            }
-        } else {
-            //-- Use MAVLink Command
-            if(_cameraMode != CAM_MODE_VIDEO) {
-                //-- Use basic MAVLink message
-                _vehicle->sendMavCommand(
-                    _compID,                                // Target component
-                    MAV_CMD_SET_CAMERA_MODE,                // Command id
-                    true,                                   // ShowError
-                    0,                                      // Reserved (Set to 0)
-                    CAM_MODE_VIDEO);                        // Camera mode (0: photo, 1: video)
-                _setCameraMode(CAM_MODE_VIDEO);
-            }
+        //-- Use MAVLink Command
+        if(_cameraMode != CAM_MODE_VIDEO) {
+            //-- Use basic MAVLink message
+            _vehicle->sendMavCommand(
+                _compID,                                // Target component
+                MAV_CMD_SET_CAMERA_MODE,                // Command id
+                true,                                   // ShowError
+                0,                                      // Reserved (Set to 0)
+                CAM_MODE_VIDEO);                        // Camera mode (0: photo, 1: video)
+            _setCameraMode(CAM_MODE_VIDEO);
         }
     }
 }
@@ -496,25 +487,16 @@ QGCCameraControl::setPhotoMode()
 {
     if(!_resetting && hasModes()) {
         qCDebug(CameraControlLog) << "setPhotoMode()";
-        //-- Does it have a mode parameter?
-        Fact* pMode = mode();
-        if(pMode) {
-            if(cameraMode() != CAM_MODE_PHOTO) {
-                pMode->setRawValue(CAM_MODE_PHOTO);
-                _setCameraMode(CAM_MODE_PHOTO);
-            }
-        } else {
-            //-- Use MAVLink Command
-            if(_cameraMode != CAM_MODE_PHOTO) {
-                //-- Use basic MAVLink message
-                _vehicle->sendMavCommand(
-                    _compID,                                // Target component
-                    MAV_CMD_SET_CAMERA_MODE,                // Command id
-                    true,                                   // ShowError
-                    0,                                      // Reserved (Set to 0)
-                    CAM_MODE_PHOTO);                        // Camera mode (0: photo, 1: video)
-                _setCameraMode(CAM_MODE_PHOTO);
-            }
+        //-- Use MAVLink Command
+        if(_cameraMode != CAM_MODE_PHOTO) {
+            //-- Use basic MAVLink message
+            _vehicle->sendMavCommand(
+                _compID,                                // Target component
+                MAV_CMD_SET_CAMERA_MODE,                // Command id
+                true,                                   // ShowError
+                0,                                      // Reserved (Set to 0)
+                CAM_MODE_PHOTO);                        // Camera mode (0: photo, 1: video)
+            _setCameraMode(CAM_MODE_PHOTO);
         }
     }
 }
@@ -1529,7 +1511,9 @@ void
 QGCCameraControl::handleCaptureStatus(const mavlink_camera_capture_status_t& cap)
 {
     //-- This is a response to MAV_CMD_REQUEST_CAMERA_CAPTURE_STATUS
-    qCDebug(CameraControlLog) << "handleCaptureStatus:" << cap.available_capacity << cap.image_interval << cap.image_status << cap.recording_time_ms << cap.video_status;
+    qCDebug(CameraControlLog) << "handleCaptureStatus:" << cap.available_capacity
+                              << cap.image_status << cap.image_count << cap.image_interval
+                              << cap.video_status << cap.recording_time_ms;
     //-- Disk Free Space
     uint32_t a = static_cast<uint32_t>(cap.available_capacity);
     if(_storageFree != a) {
