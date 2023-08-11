@@ -592,6 +592,9 @@ QGCCameraControl::formatCard(int id)
                 id,                                     // Storage ID (1 for first, 2 for second, etc.)
                 1);                                     // Do Format
         }
+
+        // after format card we need update storage info
+        QTimer::singleShot(1000, this, &QGCCameraControl::_requestStorageInfo);
     }
 }
 
