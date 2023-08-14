@@ -35,6 +35,7 @@ typedef struct {
         uint8_t     bytes[MAVLINK_MSG_PARAM_EXT_SET_FIELD_PARAM_VALUE_LEN];
     };
     uint8_t type;
+    int32_t param_length;
 }) param_ext_union_t;
 
 //-----------------------------------------------------------------------------
